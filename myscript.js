@@ -39,14 +39,9 @@ function GameBoard() {
 
     const getBoard = () => board;
 
-    const clearBoard = () => {
-        board = board.map((row) => row.map((cell) => ''));
-    }
-
     return {
         inputMarker,
         getBoard,
-        clearBoard,
         printBoard
     };
 }
@@ -107,7 +102,6 @@ function GameControler () {
         if(checkWinningBoard(row, column)){
             board.printBoard();
             console.log(`${activePlayer.name} wins!`);
-            board.clearBoard();
             return;
         }
         
