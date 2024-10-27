@@ -66,8 +66,8 @@ function GameControler () {
 
     let numberOfRounds = 0;
 
-    const player1 = new Player("dodo", "X");
-    const player2 = new Player("dada", "O");
+    const player1 = new Player(document.querySelector("#player-one").value, "X");
+    const player2 = new Player(document.querySelector("#player-two").value, "O");
 
     let activePlayer = player1;
 
@@ -120,9 +120,9 @@ function GameControler () {
                 gameEnded = true;
                 return "it's a tie";
             }
-            const turn = `${activePlayer.name}'s turn`;
-
+            
             switchPlayer();
+            const turn = `${activePlayer.name}'s turn`;
 
             return turn;
         }
@@ -193,4 +193,16 @@ function ScreenController() {
     updateScreen();
     
 }
-ScreenController();
+
+
+function startGame() {
+    const form = document.querySelector("form");
+    const overlay = document.querySelector(".overlay");
+    overlay.style.display = "none";
+    form.style.display = "none";
+    ScreenController();
+}
+
+const startGameBtn = document.querySelector(".start-game");
+
+startGameBtn.addEventListener("click", startGame);
