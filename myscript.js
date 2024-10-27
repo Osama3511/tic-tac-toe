@@ -2,7 +2,7 @@ function Cell() {
     let value = '';
 
     const inputPlayerMarker = (playerMarker) => {
-        value += playerMarker;
+        value = playerMarker;
     }
 
     const getPlayerMarker = () => value;
@@ -27,9 +27,17 @@ function GameBoard() {
     }
 
     const inputMarker = (row, column, playerMarker) => {
-        if (board[row][column].getPlayerMarker() != '') return;
+        if (board[row][column].getPlayerMarker() != '') return false;
 
         board[row][column].inputPlayerMarker(playerMarker);
+    }
+
+    const clearBoard = () => {
+        for(let i = 0 ; i < boardRow ; i++){
+            for(let j = 0 ; j < boardColumn ; j++){
+                board[i][j].inputPlayerMarker('');
+            }
+        }
     }
 
     const printBoard = () => {
@@ -42,6 +50,7 @@ function GameBoard() {
     return {
         inputMarker,
         getBoard,
+        clearBoard,
         printBoard
     };
 }
@@ -53,6 +62,8 @@ function Player(name, marker) {
 
 function GameControler () {
     const board = GameBoard();
+
+    let numberOfRounds = 0;
 
     const player1 = new Player("dodo", "X");
     const player2 = new Player("dada", "O");
@@ -70,7 +81,7 @@ function GameControler () {
         const winningBoard = currentBoard.map((row) => row.map((cell) => cell.getPlayerMarker()));
 
 
-        if (row == 1 && column == 1){
+        if (winningBoard[1][1] != ''){
             if(winningBoard[0][0] == winningBoard[1][1] &&
                 winningBoard[0][0] == winningBoard[2][2]) return true;
 
@@ -97,14 +108,29 @@ function GameControler () {
     printNewRound();
 
     const playRound = (row, column) => {
-        board.inputMarker(row, column, activePlayer.marker);
+        numberOfRounds += 1;
 
-        if(checkWinningBoard(row, column)){
-            board.printBoard();
-            console.log(`${activePlayer.name} wins!`);
+        // if the cell is already taken don't switch turns
+        if (board.inputMarker(row, column, activePlayer.marker) == false){
+            printNewRound();
             return;
         }
         
+        board.inputMarker(row, column, activePlayer.marker);
+        
+        if(checkWinningBoard(row, column)){
+            board.printBoard();
+            console.log(`${activePlayer.name} wins!`);
+            board.clearBoard();
+            return;
+        }
+        
+        if (numberOfRounds == 9) {
+            board.printBoard();
+            console.log("it's a tie!");
+            board.clearBoard();
+            return;
+        }
         switchPlayer();
         printNewRound();
     }
