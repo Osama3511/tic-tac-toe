@@ -195,7 +195,8 @@ function ScreenController() {
 }
 
 
-function startGame() {
+function startGame(e) {
+    e.preventDefault();
     const form = document.querySelector("form");
     const overlay = document.querySelector(".overlay");
     overlay.style.display = "none";
